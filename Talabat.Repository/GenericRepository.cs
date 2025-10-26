@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Talabat.Core.Entities;
 using Talabat.Core.Repositories.Contract;
-using Talabat.Repository.Data;
+using Talabat.Infrastructure.Data;
 
-namespace Talabat.Repository
+namespace Talabat.Infrastructure
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
