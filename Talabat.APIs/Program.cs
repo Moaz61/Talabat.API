@@ -66,8 +66,7 @@ namespace Talabat.APIs
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers(); 
             #endregion
