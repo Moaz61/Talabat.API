@@ -54,13 +54,14 @@ namespace Talabat.APIs
 
             var app = webApplicationBuilder.Build();
 
+            #region Apply All Pending Migrations [Update-Database] And Data Seeding
             using var scope = app.Services.CreateScope();
 
             var services = scope.ServiceProvider;
 
             var _dbContext = services.GetRequiredService<StoreContext>();
             //Ask CLR To Create Object From DbContext Explicitly
-            
+
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
             try
@@ -72,7 +73,8 @@ namespace Talabat.APIs
             {
                 var logger = loggerFactory.CreateLogger<Program>();
                 logger.LogError(ex, "an error has been occured during applying migration");
-            }
+            } 
+            #endregion
 
 
             #region Configure Kesterel Middelewares
