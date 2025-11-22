@@ -1,8 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Talabat.APIs.Errors;
+using Talabat.APIs.Extensions;
+using Talabat.APIs.Helpers;
+using Talabat.APIs.Middlewares;
 using Talabat.Core.Entities;
 using Talabat.Core.Repositories.Contract;
-using Talabat.Repository;
-using Talabat.Repository.Data;
+using Talabat.Infrastructure;
+using Talabat.Infrastructure.Data;
 
 namespace Talabat.APIs
 {
@@ -16,28 +21,28 @@ namespace Talabat.APIs
             // Add services to the container.
 
             webApplicationBuilder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            webApplicationBuilder.Services.AddEndpointsApiExplorer();
-            webApplicationBuilder.Services.AddSwaggerGen();
+
+            webApplicationBuilder.Services.AddSwaggerServices();
 
             webApplicationBuilder.Services.AddDbContext<StoreContext>(options =>
             {
                 options.UseSqlServer(webApplicationBuilder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            webApplicationBuilder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            webApplicationBuilder.Services.AddApplicationServices();
 
             #endregion
 
             var app = webApplicationBuilder.Build();
 
+            #region Apply All Pending Migrations [Update-Database] And Data Seeding
             using var scope = app.Services.CreateScope();
 
             var services = scope.ServiceProvider;
 
             var _dbContext = services.GetRequiredService<StoreContext>();
             //Ask CLR To Create Object From DbContext Explicitly
-            
+
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
             try
@@ -50,20 +55,24 @@ namespace Talabat.APIs
                 var logger = loggerFactory.CreateLogger<Program>();
                 logger.LogError(ex, "an error has been occured during applying migration");
             }
+            #endregion
 
 
             #region Configure Kesterel Middelewares
             // Configure the HTTP request pipeline.
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddlewares();
             }
+
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers(); 
             #endregion
