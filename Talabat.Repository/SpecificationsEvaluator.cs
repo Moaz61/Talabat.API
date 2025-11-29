@@ -24,6 +24,9 @@ namespace Talabat.Infrastructure
             else if (spec.OrderByDesc is not null)  //P => P.Price
                 query = query.OrderByDescending(spec.OrderByDesc);
 
+            if(spec.IsPaginationEnabled)
+                query = query.Skip(spec.Skip).Take(spec.Take);
+
             // query = _dbContext.Set<Product>().where(P => P.Id = 1)
             // Include Expressions
             // 1. P => P.Brand

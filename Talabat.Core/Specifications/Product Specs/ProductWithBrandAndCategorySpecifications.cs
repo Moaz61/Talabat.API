@@ -10,18 +10,18 @@ namespace Talabat.Core.Specifications.Product_Specs
     public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product>
     {
         //This Constructor will be used to create object that will be used to get All Products
-        public ProductWithBrandAndCategorySpecifications(string? sort, int? brandId, int? categoryId)
+        public ProductWithBrandAndCategorySpecifications(ProductSpecParams specParams)
             : base(P =>
                         
-                        (!brandId.HasValue     || P.BrandId == brandId.Value) &&
-                        (!categoryId.HasValue  || P.CategoryId == categoryId.Value)
+                        (!specParams.BrandId.HasValue     || P.BrandId == specParams.BrandId.Value) &&
+                        (!specParams.CategoryId.HasValue  || P.CategoryId == specParams.CategoryId.Value)
             )
         {
             AddIncludes();
 
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(specParams.Sort))
             {
-                switch (sort)
+                switch (specParams.Sort)
                 {
                     case "priceAsc":
                         //OrderBy = P => P.Price;
@@ -39,6 +39,12 @@ namespace Talabat.Core.Specifications.Product_Specs
             
             else
                 AddOrderBy(P => P.Name);
+
+            //totalProducts = 18 ~ 20
+            //pageSize      = 5
+            //pageIndex     = 3
+
+            ApplyPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
         }
 
         //This Constructor will be used to create object that will be used to get a specific Product With Id
