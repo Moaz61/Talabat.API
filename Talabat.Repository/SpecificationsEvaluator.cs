@@ -18,6 +18,12 @@ namespace Talabat.Infrastructure
             if (spec.Criteria is not null)  // P => P.Id = 1
                 query = query.Where(spec.Criteria);
 
+            if (spec.OrderBy is not null)  // P => P.Name
+                query = query.OrderBy(spec.OrderBy);
+
+            else if (spec.OrderByDesc is not null)  //P => P.Price
+                query = query.OrderByDescending(spec.OrderByDesc);
+
             // query = _dbContext.Set<Product>().where(P => P.Id = 1)
             // Include Expressions
             // 1. P => P.Brand

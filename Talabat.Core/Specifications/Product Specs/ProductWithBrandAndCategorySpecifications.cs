@@ -10,10 +10,31 @@ namespace Talabat.Core.Specifications.Product_Specs
     public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product>
     {
         //This Constructor will be used to create object that will be used to get All Products
-        public ProductWithBrandAndCategorySpecifications()
+        public ProductWithBrandAndCategorySpecifications(string sort)
             : base()
         {
             AddIncludes();
+
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "priceAsc":
+                        //OrderBy = P => P.Price;
+                        AddOrderBy(P => P.Price);
+                        break;
+                    case "priceDesc":
+                        //OrderByDesc = P => P.Price;
+                        AddOrderByDesc(P => P.Price);
+                        break;
+                    default:
+                        AddOrderBy(P => P.Name);
+                        break;
+                }
+            }
+            
+            else
+                AddOrderBy(P => P.Name);
         }
 
         //This Constructor will be used to create object that will be used to get a specific Product With Id
