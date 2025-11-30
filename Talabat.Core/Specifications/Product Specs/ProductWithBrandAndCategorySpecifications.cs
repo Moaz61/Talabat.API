@@ -12,7 +12,7 @@ namespace Talabat.Core.Specifications.Product_Specs
         //This Constructor will be used to create object that will be used to get All Products
         public ProductWithBrandAndCategorySpecifications(ProductSpecParams specParams)
             : base(P =>
-                        
+                        (string.IsNullOrEmpty(specParams.Search) || P.Name.ToLower().Contains(specParams.Search)) &&
                         (!specParams.BrandId.HasValue     || P.BrandId == specParams.BrandId.Value) &&
                         (!specParams.CategoryId.HasValue  || P.CategoryId == specParams.CategoryId.Value)
             )
