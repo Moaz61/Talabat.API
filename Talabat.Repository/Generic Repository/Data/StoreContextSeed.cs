@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Talabat.Core.Entities;
+using Talabat.Core.Entities.Product;
 
-namespace Talabat.Infrastructure.Data
+namespace Talabat.Infrastructure.Generic_Repository.Data
 {
     public static class StoreContextSeed
     {

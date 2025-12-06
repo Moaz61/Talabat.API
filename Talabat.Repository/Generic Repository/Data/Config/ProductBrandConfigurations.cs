@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Talabat.Core.Entities;
+using Talabat.Core.Entities.Product;
 
-namespace Talabat.Infrastructure.Data.Config
+namespace Talabat.Infrastructure.Generic_Repository.Data.Config
 {
     internal class ProductBrandConfigurations : IEntityTypeConfiguration<ProductBrand>
     {
