@@ -7,6 +7,7 @@ using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
 using Talabat.Core.Entities;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Infrastructure.Basket_Repository;
 using Talabat.Infrastructure.Generic_Repository.Data;
 
 namespace Talabat.APIs
@@ -36,6 +37,8 @@ namespace Talabat.APIs
                 var connection = webApplicationBuilder.Configuration.GetConnectionString("Redis");
                 return ConnectionMultiplexer.Connect(connection);
             });
+
+            webApplicationBuilder.Services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
 
             #endregion
 
