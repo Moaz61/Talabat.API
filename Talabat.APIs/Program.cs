@@ -1,6 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Extensions;
@@ -53,7 +56,7 @@ namespace Talabat.APIs
             webApplicationBuilder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
 
-            webApplicationBuilder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
+            webApplicationBuilder.Services.AddAuthServices(webApplicationBuilder.Configuration);
 
             #endregion
 
