@@ -1,14 +1,23 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Extensions;
 using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
+using Talabat.Application.AuthService;
 using Talabat.Core.Entities;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Core.Services.Contract;
+using Talabat.Infrastructure._Identity;
 using Talabat.Infrastructure.Basket_Repository;
-using Talabat.Infrastructure.Generic_Repository.Data;
+using Talabat.Infrastructure.Data;
 
 namespace Talabat.APIs
 {
@@ -21,7 +30,10 @@ namespace Talabat.APIs
             #region Configure Services
             // Add services to the container.
 
-            webApplicationBuilder.Services.AddControllers();
+            webApplicationBuilder.Services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             webApplicationBuilder.Services.AddSwaggerServices();
 
@@ -40,6 +52,16 @@ namespace Talabat.APIs
 
             webApplicationBuilder.Services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
 
+            webApplicationBuilder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(webApplicationBuilder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+
+            webApplicationBuilder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
+            webApplicationBuilder.Services.AddAuthServices(webApplicationBuilder.Configuration);
+
             #endregion
 
             var app = webApplicationBuilder.Build();
@@ -51,6 +73,7 @@ namespace Talabat.APIs
 
             var _dbContext = services.GetRequiredService<StoreContext>();
             //Ask CLR To Create Object From DbContext Explicitly
+            var _identityDbContext = services.GetRequiredService<ApplicationIdentityDbContext>();
 
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
@@ -58,6 +81,11 @@ namespace Talabat.APIs
             {
                 await _dbContext.Database.MigrateAsync(); //Update-Database
                 await StoreContextSeed.SeedAsync(_dbContext); // Data Seeding
+
+                await _identityDbContext.Database.MigrateAsync(); //Update Database
+
+                var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                await ApplicationIdentityContextSeed.SeedUserAsync(_userManager);
             }
             catch (Exception ex)
             {
