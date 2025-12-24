@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Talabat.Core.Entities.Product;
 
-namespace Talabat.Infrastructure.Data.Config
+namespace Talabat.Infrastructure._Data.Config.Product_Config
 {
-    internal class ProductCategoryConfigurations : IEntityTypeConfiguration<ProductCategory>
+    internal class ProductBrandConfigurations : IEntityTypeConfiguration<ProductBrand>
     {
-        public void Configure(EntityTypeBuilder<ProductCategory> builder)
+        public void Configure(EntityTypeBuilder<ProductBrand> builder)
         {
-            builder.Property(C => C.Name)
+            builder.Property(B => B.Name)
                 .IsRequired();
         }
     }
