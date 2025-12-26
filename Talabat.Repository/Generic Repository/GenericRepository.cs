@@ -15,7 +15,7 @@ namespace Talabat.Infrastructure.Generic_Repository
     {
         private readonly StoreContext _dbContext;
 
-        public GenericRepository(StoreContext dbContext) //Ask CLR For Creating Object From DbContext Implicitly
+        public GenericRepository(StoreContext dbContext) 
         {
             _dbContext = dbContext;
         }

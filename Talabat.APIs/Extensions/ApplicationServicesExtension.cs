@@ -6,8 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Helpers;
 using Talabat.Application.AuthService;
+using Talabat.Core;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Services.Contract;
+using Talabat.Infrastructure;
 using Talabat.Infrastructure.Generic_Repository;
 
 namespace Talabat.APIs.Extensions
@@ -16,7 +18,9 @@ namespace Talabat.APIs.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+
+            //services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             //services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
             services.AddAutoMapper(typeof(MappingProfiles));
