@@ -36,9 +36,11 @@ namespace Talabat.Application.OrderService
 
             if(basket?.Items?.Count > 0)
             {
-                foreach(var item in basket.Items)
+                var ProductRepository = _unitOfWork.Repository<Product>();
+
+                foreach (var item in basket.Items)
                 {
-                    var product = await _unitOfWork.Repository<Product>().GetAsync(item.Id);
+                    var product = await ProductRepository.GetAsync(item.Id);
 
                     var productItemOrdered = new ProductItemOrdered(product.Id, product.Name, product.PictureUrl);
 
