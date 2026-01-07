@@ -27,7 +27,7 @@ namespace Talabat.Infrastructure.Generic_Repository
         }
 
 
-        public async Task<T?> GetAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             ///if (typeof(T) == typeof(Product))
             ///   return await _dbContext.Set<Product>().Where(P => P.Id == id).Include(P => P.Brand).Include(P => P.Category).FirstOrDefaultAsync() as T;
@@ -41,7 +41,7 @@ namespace Talabat.Infrastructure.Generic_Repository
         }
 
 
-        public async Task<T?> GetWithSpecAsync(ISpecifications<T> spec)
+        public async Task<T?> GetByIdWithSpecAsync(ISpecifications<T> spec)
         {
             return await ApplySpecifications(spec).FirstOrDefaultAsync();
         }

@@ -8,6 +8,7 @@ using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Entities.Product;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Services.Contract;
+using Talabat.Core.Specifications.Order_Specs;
 
 namespace Talabat.Application.OrderService
 {
@@ -40,7 +41,7 @@ namespace Talabat.Application.OrderService
 
                 foreach (var item in basket.Items)
                 {
-                    var product = await ProductRepository.GetAsync(item.Id);
+                    var product = await ProductRepository.GetByIdAsync(item.Id);
 
                     var productItemOrdered = new ProductItemOrdered(product.Id, product.Name, product.PictureUrl);
 
@@ -56,7 +57,7 @@ namespace Talabat.Application.OrderService
 
             // 4. Get Delivery Method From DeliveryMethods Repo
 
-            var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetAsync(deliveryMethodId);
+            var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
 
             // 5. Create Order
 
@@ -81,14 +82,26 @@ namespace Talabat.Application.OrderService
             return order;
         }
 
-        public Task<IReadOnlyList<Order>> GetOrderForUserAsync(string buyerEmail)
+        public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var ordersRepo = _unitOfWork.Repository<Order>();
+
+            var spec = new OrderSpecifications(buyerEmail);
+
+            var orders = await ordersRepo.GetAllWithSpecAsync(spec);
+
+            return orders;
         }
 
-        public Task<Order> GetOrderByIdForUserAsync(string buyerEmail, int orderId)
+        public Task<Order?> GetOrderByIdForUserAsync(int orderId, string buyerEmail)
         {
-            throw new NotImplementedException();
+            var orderRepo = _unitOfWork.Repository<Order>();
+
+            var orderSpec = new OrderSpecifications(orderId, buyerEmail);
+
+            var order = orderRepo.GetByIdWithSpecAsync(orderSpec);
+
+            return order;
         }
 
         public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodAsync()
