@@ -15,7 +15,7 @@ namespace Talabat.Infrastructure.Generic_Repository
     {
         private readonly StoreContext _dbContext;
 
-        public GenericRepository(StoreContext dbContext) //Ask CLR For Creating Object From DbContext Implicitly
+        public GenericRepository(StoreContext dbContext) 
         {
             _dbContext = dbContext;
         }
@@ -27,7 +27,7 @@ namespace Talabat.Infrastructure.Generic_Repository
         }
 
 
-        public async Task<T?> GetAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             ///if (typeof(T) == typeof(Product))
             ///   return await _dbContext.Set<Product>().Where(P => P.Id == id).Include(P => P.Brand).Include(P => P.Category).FirstOrDefaultAsync() as T;
@@ -41,7 +41,7 @@ namespace Talabat.Infrastructure.Generic_Repository
         }
 
 
-        public async Task<T?> GetWithSpecAsync(ISpecifications<T> spec)
+        public async Task<T?> GetByIdWithSpecAsync(ISpecifications<T> spec)
         {
             return await ApplySpecifications(spec).FirstOrDefaultAsync();
         }
@@ -56,5 +56,13 @@ namespace Talabat.Infrastructure.Generic_Repository
             return SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
 
+        public void Add(T entity)
+            => _dbContext.Set<T>().Add(entity);
+
+        public void Update(T entity)
+            => _dbContext.Set<T>().Update(entity);
+
+        public void Delete(T entity)
+            => _dbContext.Set<T>().Remove(entity);
     }
 }
