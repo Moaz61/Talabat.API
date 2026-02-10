@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Talabat.Core;
 using Talabat.Core.Entities;
 using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Entities.Product;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Core.UnitOfWork.Contract;
 using Talabat.Infrastructure.Data;
 using Talabat.Infrastructure.Generic_Repository;
 

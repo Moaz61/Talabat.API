@@ -1,17 +1,22 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Helpers;
 using Talabat.Application.AuthService;
 using Talabat.Application.OrderService;
+using Talabat.Application.PaymentService;
 using Talabat.Application.ProductService;
-using Talabat.Core;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Services.Contract;
+using Talabat.Core.UnitOfWork.Contract;
 using Talabat.Infrastructure;
+using Talabat.Infrastructure._Identity;
+using Talabat.Infrastructure.Basket_Repository;
 using Talabat.Infrastructure.Generic_Repository;
 
 namespace Talabat.APIs.Extensions
@@ -20,6 +25,10 @@ namespace Talabat.APIs.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped(typeof(IPaymentService), typeof(PaymentService));
+
+            services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
+
             services.AddScoped(typeof(IProductService), typeof(ProductService));
 
             services.AddScoped(typeof(IOrderService), typeof(OrderService));
@@ -53,6 +62,9 @@ namespace Talabat.APIs.Extensions
 
         public static IServiceCollection AddAuthServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+               .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
             services.AddAuthentication(/*JwtBearerDefaults.AuthenticationScheme*/ options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

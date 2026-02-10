@@ -50,15 +50,10 @@ namespace Talabat.APIs
                 return ConnectionMultiplexer.Connect(connection);
             });
 
-            webApplicationBuilder.Services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
-
             webApplicationBuilder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
                 options.UseSqlServer(webApplicationBuilder.Configuration.GetConnectionString("IdentityConnection"));
             });
-
-            webApplicationBuilder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationIdentityDbContext>();
 
             webApplicationBuilder.Services.AddAuthServices(webApplicationBuilder.Configuration);
 

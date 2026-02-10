@@ -8,7 +8,7 @@ using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Entities.Product;
 using Talabat.Core.Repositories.Contract;
 
-namespace Talabat.Core
+namespace Talabat.Core.UnitOfWork.Contract
 {
     public interface IUnitOfWork : IAsyncDisposable 
     {
