@@ -25,5 +25,6 @@ namespace Talabat.Core.Specifications.Order_Specs
             Includes.Add(O => O.DeliveryMethod);
             Includes.Add(O => O.Items);
         }
+
     }
 }
