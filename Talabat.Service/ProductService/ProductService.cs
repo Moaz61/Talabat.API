@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Talabat.Core;
 using Talabat.Core.Entities.Product;
 using Talabat.Core.Services.Contract;
 using Talabat.Core.Specifications.Product_Specs;
+using Talabat.Core.UnitOfWork.Contract;
 
 namespace Talabat.Application.ProductService
 {
